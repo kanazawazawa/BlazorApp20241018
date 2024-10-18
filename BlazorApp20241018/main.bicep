@@ -4,15 +4,15 @@
 param resourceGroupName string = 'rg-20241018-githubactionsdemo'
 
 @description('The location of the resource group')
-param location string = 'japaneast'
+param location string = 'East US'
 
 @description('The name of the App Service plan')
-param appServicePlanName string = 'example-appserviceplan'
+param appServicePlanName string = 'plan-20241018'
 
 @description('The name of the App Service')
-param appServiceName string = 'example-appservice'
+param appServiceName string = 'app-20241018'
 
-resource appServicePlan 'Microsoft.Web/serverfarms@2021-02-01' = {
+resource appServicePlan 'Microsoft.Web/serverfarms@2021-02-01' existing = {
   name: appServicePlanName
   location: location
   sku: {
@@ -40,4 +40,3 @@ resource appService 'Microsoft.Web/sites@2021-02-01' = {
 }
 
 output appServiceEndpoint string = appService.properties.defaultHostName
-
