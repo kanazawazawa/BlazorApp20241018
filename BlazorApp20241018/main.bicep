@@ -4,7 +4,7 @@
 param resourceGroupName string = 'rg-20241018-githubactionsdemo'
 
 @description('The location of the resource group')
-param location string = 'East US'
+param location string = 'japaneast'
 
 @description('The name of the App Service plan')
 param appServicePlanName string = 'plan-20241018'
@@ -12,7 +12,7 @@ param appServicePlanName string = 'plan-20241018'
 @description('The name of the App Service')
 param appServiceName string = 'app-20241018'
 
-resource appServicePlan 'Microsoft.Web/serverfarms@2021-02-01' existing = {
+resource appServicePlan 'Microsoft.Web/serverfarms@2021-02-01' = {
   name: appServicePlanName
   location: location
   sku: {
@@ -20,7 +20,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2021-02-01' existing = {
     tier: 'Standard'
   }
   properties: {
-    reserved: true
+    reserved: false // WindowsベースのApp Serviceプラン
   }
 }
 
@@ -33,7 +33,7 @@ resource appService 'Microsoft.Web/sites@2021-02-01' = {
       netFrameworkVersion: 'v8.0'
     }
   }
-  kind: 'app'
+  kind: 'app' // WindowsベースのApp Service
   identity: {
     type: 'SystemAssigned'
   }
