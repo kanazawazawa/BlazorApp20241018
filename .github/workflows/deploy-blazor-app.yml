@@ -23,7 +23,7 @@ jobs:
       run: dotnet restore BlazorApp20241018/BlazorApp20241018.csproj
 
     - name: Build the Blazor app
-      run: dotnet publish BlazorApp20241018/BlazorApp20241018.csproj -c Release -o BlazorApp20241018/publish
+      run: dotnet publish BlazorApp20241018/BlazorApp20241018.csproj -c Release -o ./publish
 
     - name: Set up Azure CLI
       run: |
@@ -34,5 +34,5 @@ jobs:
 
     - name: Deploy to Azure Web App
       run: |
-        az webapp deploy --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --name ${{ secrets.AZURE_WEBAPP_NAME }} --src-path BlazorApp20241018/publish --type zip
+        az webapp deploy --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --name ${{ secrets.AZURE_WEBAPP_NAME }} --src-path ./publish --type zip
 
