@@ -13,20 +13,26 @@ permissions:
 env:
   AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '8.0.x'           # set this to the dot net version to use
+  AZURE_WEBAPP_NAME: ${{ secrets.AZURE_WEBAPP_NAME }}
       
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+  steps:
+    # Checkout the repo
+    - uses: actions/checkout@main
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+    
+    # Setup .NET Core SDK
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }} 
-        
+    
     # Run dotnet build and publish
     - name: dotnet build and publish
       run: |
@@ -35,13 +41,12 @@ jobs:
         dotnet publish -c Release --property:PublishDir='${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp' 
         
     # Deploy to Azure Web apps
-    - name: 'Run Azure webapp deploy action using publish profile credentials'
+    - name: 'Run Azure webapp deploy action using Azure Credentials'
       uses: azure/webapps-deploy@v3
       with: 
-        app-name: ${{ secrets.AZURE_WEBAPP_NAME }} # Replace with your app name
+        app-name: ${{ env.AZURE_WEBAPP_NAME }} # Replace with your app name
         package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
-
+    
     - name: logout
       run: |
         az logout
-
